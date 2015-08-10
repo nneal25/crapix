@@ -1,0 +1,412 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".HomeActivityFragment"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+
+
+    <ScrollView
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:columnCount="5"
+            android:rowCount="100"
+            android:alignmentMode="alignBounds">
+
+<!--Beginning of Economy Section-->
+            <TextView
+                android:id="@+id/EconomyLabel"
+                android:layout_columnSpan="5"
+                android:layout_width="match_parent"
+                android:text="Economy Overview"
+                android:textStyle="bold"
+                android:textSize="18dp"
+                android:gravity="center_horizontal"
+                android:paddingBottom="16dp"/>
+
+            <TextView
+                android:id="@+id/CurrentResourcesLabel"
+                android:layout_row="0"
+                android:layout_columnSpan="2"
+                android:text="Current Resources"
+                android:textStyle="bold"
+                android:paddingBottom="10dp"/>
+            <TextView
+                android:id="@+id/CurrentMoneyLabel"
+                android:layout_row="2"
+                android:layout_column="0"
+                android:text="Money:"/>
+
+            <TextView
+                android:id="@+id/CurrentMetalLabel"
+                android:layout_row="3"
+                android:layout_column="0"
+                android:text="Metal:"/>
+
+            <TextView
+                android:id="@+id/CurrentMineralsLabel"
+                android:layout_row="4"
+                android:layout_column="0"
+                android:text="Minerals:"/>
+
+            <TextView
+                android:id="@+id/CurrentOilLabel"
+                android:layout_row="5"
+                android:layout_column="0"
+                android:text="Oil:"/>
+
+            <TextView
+                android:id="@+id/CurrentUraniumLabel"
+                android:layout_row="6"
+                android:layout_column="0"
+               android:text="Uranium:"/>
+
+            <TextView
+                android:id="@+id/CurrentMoney"
+                android:layout_row="2"
+                android:layout_column="1"
+                android:text="1.23Q"/>
+
+            <TextView
+                android:id="@+id/CurrentMet"
+                android:layout_row="3"
+                android:layout_column="1"
+                android:text="1.23T"/>
+
+            <TextView
+                android:id="@+id/CurrentMin"
+                android:layout_row="4"
+                android:layout_column="1"
+                android:text="1.23T"/>
+
+            <TextView
+                android:id="@+id/CurrentOil"
+                android:layout_row="5"
+                android:layout_column="1"
+                android:text="1.23T"/>
+
+            <TextView
+                android:id="@+id/CurrentU"
+                android:layout_row="6"
+                android:layout_column="1"
+                android:text="1.23T"/>
+
+
+            <TextView
+                android:id="@+id/ChangePerTickLabel"
+                android:layout_row="1"
+                android:layout_column="3"
+                android:text="Change per Tick"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/TickMoney"
+                android:layout_row="2"
+                android:layout_column="3"
+                android:text="+ 1000"/>
+
+            <TextView
+                android:id="@+id/TickMet"
+                android:layout_row="3"
+                android:layout_column="3"
+                android:text="+ 1000"/>
+
+            <TextView
+                android:id="@+id/TickMin"
+                android:layout_row="4"
+                android:layout_column="3"
+                android:text="+ 1000"/>
+
+
+            <TextView
+                android:id="@+id/TickOil"
+                android:layout_row="5"
+                android:layout_column="3"
+                android:text="+ 1000"/>
+
+            <TextView
+                android:id="@+id/TickU"
+                android:layout_row="6"
+                android:layout_column="3"
+                android:text="+ 100"/>
+
+<!-- Beginning of Military Section -->
+            <TextView
+                android:id="@+id/MilitaryLabel"
+                android:layout_marginTop="32dp"
+                android:layout_columnSpan="5"
+                android:layout_width="match_parent"
+                android:text="Military Overview"
+                android:textStyle="bold"
+                android:textSize="18dp"
+                android:gravity="center_horizontal"
+                android:paddingBottom="16dp"/>
+
+<!-- Column 0 -->
+            <TextView
+                android:id="@+id/UnitTypeLabel"
+                android:layout_row="8"
+                android:layout_column="0"
+                android:text="Unit Type"
+                android:textStyle="bold"
+                android:paddingBottom="10dp"/>
+
+            <TextView
+                android:id="@+id/LandUnit"
+                android:layout_row="10"
+                android:layout_column="0"
+                android:text="Land"/>
+
+            <TextView
+                android:id="@+id/WaterUnit"
+                android:layout_row="11"
+                android:layout_column="0"
+                android:text="Water"/>
+
+            <TextView
+                android:id="@+id/AirUnit"
+                android:layout_row="12"
+                android:layout_column="0"
+                android:text="Air" />
+
+<!-- Column 1 -->
+            <TextView
+                android:id="@+id/UnitQuantityLabel"
+                android:paddingLeft="16dp"
+                android:layout_row="8"
+                android:layout_column="1"
+                android:text="Quantity"
+                android:textStyle="bold"
+                android:layout_gravity="center_horizontal"
+                android:paddingBottom="10dp"/>
+
+            <TextView
+                android:id="@+id/LandQuantity"
+                android:paddingLeft="16dp"
+                android:layout_row="10"
+                android:layout_column="1"
+                android:text="1.23T"
+                android:layout_gravity="center_horizontal"/>
+
+            <TextView
+                android:id="@+id/WaterQuantity"
+                android:layout_row="11"
+                android:paddingLeft="16dp"
+                android:layout_column="1"
+                android:text="1.23T"
+                android:layout_gravity="center_horizontal"/>
+
+            <TextView
+                android:id="@+id/AirQuantity"
+                android:layout_row="12"
+                android:paddingLeft="16dp"
+                android:layout_column="1"
+                android:text="1.23T"
+                android:layout_gravity="center_horizontal"/>
+
+            <TextView
+                android:id="@+id/TotalCostLabel"
+                android:layout_row="13"
+                android:layout_column="1"
+                android:layout_columnSpan="2"
+                android:text="Total Army Cost:"
+                android:textStyle="bold"
+                android:layout_gravity="right"/>
+
+<!-- Column 2 -->
+            <TextView
+                android:id="@+id/AttackLabel"
+                android:paddingLeft="16dp"
+                android:layout_row="8"
+                android:layout_column="2"
+                android:text="Attack"
+                android:textStyle="bold"
+                android:layout_gravity="center_horizontal"
+                android:paddingBottom="10dp"/>
+
+            <TextView
+                android:id="@+id/LandAttack"
+                android:paddingLeft="16dp"
+                android:layout_row="10"
+                android:layout_column="2"
+                android:text="1.23T"
+                android:layout_gravity="center_horizontal"/>
+
+            <TextView
+                android:id="@+id/WaterAttack"
+                android:layout_row="11"
+                android:paddingLeft="16dp"
+                android:layout_column="2"
+                android:text="1.23T"
+                android:layout_gravity="center_horizontal"/>
+
+            <TextView
+                android:id="@+id/AirAttack"
+                android:layout_row="12"
+                android:paddingLeft="16dp"
+                android:layout_column="2"
+                android:text="1.23T"
+                android:layout_gravity="center_horizontal"/>
+
+<!-- Column 3 -->
+            <TextView
+                android:id="@+id/DefenseLabel"
+                android:paddingLeft="16dp"
+                android:layout_row="8"
+                android:layout_column="3"
+                android:text="Defense"
+                android:textStyle="bold"
+                android:layout_gravity="center_horizontal"
+                android:paddingBottom="10dp"/>
+
+            <TextView
+                android:id="@+id/LandDefense"
+                android:paddingLeft="16dp"
+                android:layout_row="10"
+                android:layout_column="3"
+                android:text="1.23T"
+                android:layout_gravity="center_horizontal"/>
+
+            <TextView
+                android:id="@+id/WaterDefense"
+                android:layout_row="11"
+                android:paddingLeft="16dp"
+                android:layout_column="3"
+                android:text="1.23T"
+                android:layout_gravity="center_horizontal"/>
+
+            <TextView
+                android:id="@+id/AirDefense"
+                android:layout_row="12"
+                android:paddingLeft="16dp"
+                android:layout_column="3"
+                android:text="1.23T"
+                android:layout_gravity="center_horizontal"/>
+
+            <TextView
+                android:id="@+id/TotalCost"
+                android:paddingTop="16dp"
+                android:layout_row="13"
+                android:layout_column="3"
+                android:layout_gravity="left"
+                android:paddingLeft="16dp"
+                android:text="1.23T"/>
+
+<!-- Beginning of Buildings Section -->
+            <TextView
+                android:id="@+id/BuildingsLabel"
+                android:layout_marginTop="32dp"
+                android:layout_columnSpan="5"
+                android:layout_width="match_parent"
+                android:text="Buildings Overview"
+                android:textStyle="bold"
+                android:textSize="18dp"
+                android:gravity="center_horizontal"
+                android:paddingBottom="16dp"/>
+
+
+            <TextView
+                android:id="@+id/BuildingNameLabel"
+                android:layout_row="15"
+                android:layout_column="0"
+                android:layout_columnSpan="2"
+                android:layout_columnWeight="1"
+                android:text="Building Name"
+                android:textStyle="bold"
+                android:paddingBottom="10dp"/>
+
+            <TextView
+                android:id="@+id/BuildingQuantityLabel"
+                android:paddingLeft="16dp"
+                android:layout_row="15"
+                android:layout_column="2"
+                android:layout_columnSpan="2"
+                android:text="Quantity"
+                android:textStyle="bold"
+                android:layout_gravity="center_horizontal"
+                android:paddingBottom="10dp"/>
+
+            <!--Housing-->
+            <TextView
+                android:id="@+id/HousingLabel"
+                android:layout_row="16"
+                android:layout_column="0"
+                android:layout_columnSpan="2"
+                android:text="Housing"/>
+
+            <TextView
+                android:id="@+id/HousingQuantity"
+                android:layout_row="16"
+                android:layout_column="3"
+                android:layout_columnSpan="2"
+                android:text="1234567890"/>
+
+            <!--Metal Mine-->
+            <TextView
+                android:id="@+id/MetalMineLabel"
+                android:layout_row="17"
+                android:layout_column="0"
+                android:layout_columnSpan="2"
+                android:text="Metal Mine"/>
+
+            <TextView
+                android:id="@+id/MetalMineQuantity"
+                android:layout_row="17"
+                android:layout_column="3"
+                android:layout_columnSpan="2"
+                android:text="1234567980"/>
+
+            <!--Mineral Plant-->
+            <TextView
+                android:id="@+id/MineralPlantLabel"
+                android:layout_row="18"
+                android:layout_column="0"
+                android:layout_columnSpan="2"
+                android:text="Mineral Plant"/>
+
+            <TextView
+                android:id="@+id/MineralPlantQuantity"
+                android:layout_row="18"
+                android:layout_column="3"
+                android:layout_columnSpan="2"
+                android:text="1234567890"/>
+
+            <!--Oil Refinery-->
+            <TextView
+                android:id="@+id/OilRefineryLabel"
+                android:layout_row="19"
+                android:layout_column="0"
+                android:layout_columnSpan="2"
+                android:text="Oil Refinery"/>
+
+            <TextView
+                android:id="@+id/OilRefineryQuantity"
+                android:layout_row="19"
+                android:layout_column="3"
+                android:layout_columnSpan="2"
+                android:text="1234567890"/>
+
+            <!--Uranium Enrichment-->
+            <TextView
+                android:id="@+id/UraniumEnrichmentLabel"
+                android:layout_row="20"
+                android:layout_column="0"
+                android:layout_columnSpan="2"
+                android:text="UraniumEnrichment"/>
+
+            <TextView
+                android:id="@+id/UraniumEnrichmentQuantity"
+                android:layout_row="20"
+                android:layout_column="3"
+                android:layout_columnSpan="2"
+                android:text="1234567890"/>
+        </GridLayout>
+    </ScrollView>
+</LinearLayout>
