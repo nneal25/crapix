@@ -5,10 +5,8 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.os.Build;
 import android.test.AndroidTestCase;
 import android.util.Log;
-
 
 import com.example.android.crapix.data.CrapixContract.CrapixEntry;
 
@@ -119,27 +117,15 @@ public class TestProvider extends AndroidTestCase {
         assertEquals("Error: the CrapixEntry CONTENT_URI should return CrapixEntry.CONTENT_TYPE",
                 CrapixEntry.CONTENT_TYPE, type);
 
-        String testLocation = "1";
+        Long testLocation = 1L;
         // content://com.example.android.sunshine.app/weather/94074
         type = mContext.getContentResolver().getType(
                 CrapixEntry.buildCrapixUri(testLocation));
         // vnd.android.cursor.dir/com.example.android.sunshine.app/weather
         assertEquals("Error: the CrapixEntry CONTENT_URI with location should return CrapixEntry.CONTENT_TYPE",
                 CrapixEntry.CONTENT_TYPE, type);
-
-        long testDate = 1419120000L; // December 21st, 2014
-        // content://com.example.android.sunshine.app/weather/94074/20140612
-        type = mContext.getContentResolver().getType(
-                CrapixEntry.buildWeatherLocationWithDate(testLocation, testDate));
-        // vnd.android.cursor.item/com.example.android.sunshine.app/weather/1419120000
-        assertEquals("Error: the CrapixEntry CONTENT_URI with location and date should return CrapixEntry.CONTENT_ITEM_TYPE",
-                CrapixEntry.CONTENT_ITEM_TYPE, type);
-
         // content://com.example.android.sunshine.app/location/
-        type = mContext.getContentResolver().getType(LocationEntry.CONTENT_URI);
-        // vnd.android.cursor.dir/com.example.android.sunshine.app/location
-        assertEquals("Error: the LocationEntry CONTENT_URI should return LocationEntry.CONTENT_TYPE",
-                LocationEntry.CONTENT_TYPE, type);
+
     }
 
 
@@ -153,14 +139,8 @@ public class TestProvider extends AndroidTestCase {
         CrapixDbHelper dbHelper = new CrapixDbHelper(mContext);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        ContentValues testValues = TestUtilities.createNorthPoleLocationValues();
-        long locationRowId = TestUtilities.insertNorthPoleLocationValues(mContext);
-
-        // Fantastic.  Now that we have a location, add some weather!
-        ContentValues weatherValues = TestUtilities.createWeatherValues(locationRowId);
-
-        long weatherRowId = db.insert(CrapixEntry.TABLE_NAME, null, weatherValues);
-        assertTrue("Unable to Insert CrapixEntry into the Database", weatherRowId != -1);
+        ContentValues testValues = TestUtilities.createPlayerValues();
+        long locationRowId = TestUtilities.InsertCountryId(mContext);
 
         db.close();
 
@@ -174,41 +154,10 @@ public class TestProvider extends AndroidTestCase {
         );
 
         // Make sure we get the correct cursor out of the database
-        TestUtilities.validateCursor("testBasicWeatherQuery", weatherCursor, weatherValues);
+        TestUtilities.validateCursor("testBasicWeatherQuery", weatherCursor, testValues);
     }
 
-    /*
-        This test uses the database directly to insert and then uses the ContentProvider to
-        read out the data.  Uncomment this test to see if your location queries are
-        performing correctly.
-     */
-    public void testBasicLocationQueries() {
-        // insert our test records into the database
-        CrapixDbHelper dbHelper = new CrapixDbHelper(mContext);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        ContentValues testValues = TestUtilities.createNorthPoleLocationValues();
-        long locationRowId = TestUtilities.insertNorthPoleLocationValues(mContext);
-
-        // Test the basic content provider query
-        Cursor locationCursor = mContext.getContentResolver().query(
-                LocationEntry.CONTENT_URI,
-                null,
-                null,
-                null,
-                null
-        );
-
-        // Make sure we get the correct cursor out of the database
-        TestUtilities.validateCursor("testBasicLocationQueries, location query", locationCursor, testValues);
-
-        // Has the NotificationUri been set correctly? --- we can only test this easily against API
-        // level 19 or greater because getNotificationUri was added in API level 19.
-        if ( Build.VERSION.SDK_INT >= 19 ) {
-            assertEquals("Error: Location Query did not properly set NotificationUri",
-                    locationCursor.getNotificationUri(), LocationEntry.CONTENT_URI);
-        }
-    }
 
     /*
         This test uses the provider to insert and then update the data. Uncomment this test to
@@ -216,10 +165,10 @@ public class TestProvider extends AndroidTestCase {
      */
     public void testUpdateLocation() {
         // Create a new map of values, where column names are the keys
-        ContentValues values = TestUtilities.createNorthPoleLocationValues();
+        ContentValues values = TestUtilities.createPlayerValues();
 
         Uri locationUri = mContext.getContentResolver().
-                insert(LocationEntry.CONTENT_URI, values);
+                insert(CrapixEntry.CONTENT_URI, values);
         long locationRowId = ContentUris.parseId(locationUri);
 
         // Verify we got a row back.
@@ -227,18 +176,18 @@ public class TestProvider extends AndroidTestCase {
         Log.d(LOG_TAG, "New row id: " + locationRowId);
 
         ContentValues updatedValues = new ContentValues(values);
-        updatedValues.put(LocationEntry._ID, locationRowId);
-        updatedValues.put(LocationEntry.COLUMN_CITY_NAME, "Santa's Village");
+        updatedValues.put(CrapixEntry._ID, locationRowId);
+        updatedValues.put(CrapixEntry.COLUMN_UraniumEnrichment, 1000000);
 
         // Create a cursor with observer to make sure that the content provider is notifying
         // the observers as expected
-        Cursor locationCursor = mContext.getContentResolver().query(LocationEntry.CONTENT_URI, null, null, null, null);
+        Cursor locationCursor = mContext.getContentResolver().query(CrapixEntry.CONTENT_URI, null, null, null, null);
 
         TestUtilities.TestContentObserver tco = TestUtilities.getTestContentObserver();
         locationCursor.registerContentObserver(tco);
 
         int count = mContext.getContentResolver().update(
-                LocationEntry.CONTENT_URI, updatedValues, LocationEntry._ID + "= ?",
+                CrapixEntry.CONTENT_URI, updatedValues, CrapixEntry._ID + "= ?",
                 new String[] { Long.toString(locationRowId)});
         assertEquals(count, 1);
 
@@ -253,9 +202,9 @@ public class TestProvider extends AndroidTestCase {
 
         // A cursor is your primary interface to the query results.
         Cursor cursor = mContext.getContentResolver().query(
-                LocationEntry.CONTENT_URI,
+                CrapixEntry.CONTENT_URI,
                 null,   // projection
-                LocationEntry._ID + " = " + locationRowId,
+                CrapixEntry._ID + " = " + locationRowId,
                 null,   // Values for the "where" clause
                 null    // sort order
         );
@@ -273,12 +222,12 @@ public class TestProvider extends AndroidTestCase {
     // in your provider.  It relies on insertions with testInsertReadProvider, so insert and
     // query functionality must also be complete before this test can be used.
     public void testInsertReadProvider() {
-        ContentValues testValues = TestUtilities.createNorthPoleLocationValues();
+        ContentValues testValues = TestUtilities.createPlayerValues();
 
         // Register a content observer for our insert.  This time, directly with the content resolver
         TestUtilities.TestContentObserver tco = TestUtilities.getTestContentObserver();
-        mContext.getContentResolver().registerContentObserver(LocationEntry.CONTENT_URI, true, tco);
-        Uri locationUri = mContext.getContentResolver().insert(LocationEntry.CONTENT_URI, testValues);
+        mContext.getContentResolver().registerContentObserver(CrapixEntry.CONTENT_URI, true, tco);
+        Uri locationUri = mContext.getContentResolver().insert(CrapixEntry.CONTENT_URI, testValues);
 
         // Did our content observer get called?  Students:  If this fails, your insert location
         // isn't calling getContext().getContentResolver().notifyChange(uri, null);
@@ -295,7 +244,7 @@ public class TestProvider extends AndroidTestCase {
 
         // A cursor is your primary interface to the query results.
         Cursor cursor = mContext.getContentResolver().query(
-                LocationEntry.CONTENT_URI,
+                CrapixEntry.CONTENT_URI,
                 null, // leaving "columns" null just returns all the columns.
                 null, // cols for "where" clause
                 null, // values for "where" clause
@@ -304,73 +253,9 @@ public class TestProvider extends AndroidTestCase {
 
         TestUtilities.validateCursor("testInsertReadProvider. Error validating LocationEntry.",
                 cursor, testValues);
-
-        // Fantastic.  Now that we have a location, add some weather!
-        ContentValues weatherValues = TestUtilities.createWeatherValues(locationRowId);
-        // The TestContentObserver is a one-shot class
-        tco = TestUtilities.getTestContentObserver();
-
-        mContext.getContentResolver().registerContentObserver(CrapixEntry.CONTENT_URI, true, tco);
-
-        Uri weatherInsertUri = mContext.getContentResolver()
-                .insert(CrapixEntry.CONTENT_URI, weatherValues);
-        assertTrue(weatherInsertUri != null);
-
-        // Did our content observer get called?  Students:  If this fails, your insert weather
-        // in your ContentProvider isn't calling
-        // getContext().getContentResolver().notifyChange(uri, null);
         tco.waitForNotificationOrFail();
         mContext.getContentResolver().unregisterContentObserver(tco);
 
-        // A cursor is your primary interface to the query results.
-        Cursor weatherCursor = mContext.getContentResolver().query(
-                CrapixEntry.CONTENT_URI,  // Table to Query
-                null, // leaving "columns" null just returns all the columns.
-                null, // cols for "where" clause
-                null, // values for "where" clause
-                null // columns to group by
-        );
-
-        TestUtilities.validateCursor("testInsertReadProvider. Error validating CrapixEntry insert.",
-                weatherCursor, weatherValues);
-
-        // Add the location values in with the weather data so that we can make
-        // sure that the join worked and we actually get all the values back
-        weatherValues.putAll(testValues);
-
-        // Get the joined Weather and Location data
-        weatherCursor = mContext.getContentResolver().query(
-                CrapixEntry.buildWeatherLocation(TestUtilities.TEST_LOCATION),
-                null, // leaving "columns" null just returns all the columns.
-                null, // cols for "where" clause
-                null, // values for "where" clause
-                null  // sort order
-        );
-        TestUtilities.validateCursor("testInsertReadProvider.  Error validating joined Weather and Location Data.",
-                weatherCursor, weatherValues);
-
-        // Get the joined Weather and Location data with a start date
-        weatherCursor = mContext.getContentResolver().query(
-                CrapixEntry.buildWeatherLocationWithStartDate(
-                        TestUtilities.TEST_LOCATION, TestUtilities.TEST_DATE),
-                null, // leaving "columns" null just returns all the columns.
-                null, // cols for "where" clause
-                null, // values for "where" clause
-                null  // sort order
-        );
-        TestUtilities.validateCursor("testInsertReadProvider.  Error validating joined Weather and Location Data with start date.",
-                weatherCursor, weatherValues);
-
-        // Get the joined Weather data for a specific date
-        weatherCursor = mContext.getContentResolver().query(
-                CrapixEntry.buildWeatherLocationWithDate(TestUtilities.TEST_LOCATION, TestUtilities.TEST_DATE),
-                null,
-                null,
-                null,
-                null
-        );
-        TestUtilities.validateCursor("testInsertReadProvider.  Error validating joined Weather and Location data for a specific date.",
-                weatherCursor, weatherValues);
     }
 
     // Make sure we can still delete after adding/updating stuff
@@ -383,7 +268,7 @@ public class TestProvider extends AndroidTestCase {
 
         // Register a content observer for our location delete.
         TestUtilities.TestContentObserver locationObserver = TestUtilities.getTestContentObserver();
-        mContext.getContentResolver().registerContentObserver(LocationEntry.CONTENT_URI, true, locationObserver);
+        mContext.getContentResolver().registerContentObserver(CrapixEntry.CONTENT_URI, true, locationObserver);
 
         // Register a content observer for our weather delete.
         TestUtilities.TestContentObserver weatherObserver = TestUtilities.getTestContentObserver();
@@ -404,23 +289,22 @@ public class TestProvider extends AndroidTestCase {
 
     static private final int BULK_INSERT_RECORDS_TO_INSERT = 10;
     static ContentValues[] createBulkInsertWeatherValues(long locationRowId) {
-        long currentTestDate = TestUtilities.TEST_DATE;
-        long millisecondsInADay = 1000*60*60*24;
+        long Id = 1;
         ContentValues[] returnContentValues = new ContentValues[BULK_INSERT_RECORDS_TO_INSERT];
 
-        for ( int i = 0; i < BULK_INSERT_RECORDS_TO_INSERT; i++, currentTestDate+= millisecondsInADay ) {
-            ContentValues weatherValues = new ContentValues();
-            weatherValues.put(CrapixContract.CrapixEntry.COLUMN_LOC_KEY, locationRowId);
-            weatherValues.put(CrapixContract.CrapixEntry.COLUMN_DATE, currentTestDate);
-            weatherValues.put(CrapixContract.CrapixEntry.COLUMN_DEGREES, 1.1);
-            weatherValues.put(CrapixContract.CrapixEntry.COLUMN_HUMIDITY, 1.2 + 0.01 * (float) i);
-            weatherValues.put(CrapixContract.CrapixEntry.COLUMN_PRESSURE, 1.3 - 0.01 * (float) i);
-            weatherValues.put(CrapixContract.CrapixEntry.COLUMN_MAX_TEMP, 75 + i);
-            weatherValues.put(CrapixContract.CrapixEntry.COLUMN_MIN_TEMP, 65 - i);
-            weatherValues.put(CrapixContract.CrapixEntry.COLUMN_SHORT_DESC, "Asteroids");
-            weatherValues.put(CrapixContract.CrapixEntry.COLUMN_WIND_SPEED, 5.5 + 0.2 * (float) i);
-            weatherValues.put(CrapixContract.CrapixEntry.COLUMN_WEATHER_ID, 321);
-            returnContentValues[i] = weatherValues;
+        for ( int i = 0; i < BULK_INSERT_RECORDS_TO_INSERT; i++, Id += 1 ) {
+            ContentValues playerValues = new ContentValues();
+            playerValues.put(CrapixContract.CrapixEntry.COLUMN_Money, 1000000);
+            playerValues.put(CrapixContract.CrapixEntry.COLUMN_Housing, 25);
+            playerValues.put(CrapixContract.CrapixEntry.COLUMN_Metal, 500000);
+            playerValues.put(CrapixContract.CrapixEntry.COLUMN_MetalMine, 20);
+            playerValues.put(CrapixContract.CrapixEntry.COLUMN_Minerals, 400000);
+            playerValues.put(CrapixContract.CrapixEntry.COLUMN_MineralPlant, 23);
+            playerValues.put(CrapixContract.CrapixEntry.COLUMN_Oil, 200000);
+            playerValues.put(CrapixContract.CrapixEntry.COLUMN_OilRefinery, 5);
+            playerValues.put(CrapixContract.CrapixEntry.COLUMN_Uranium, 100);
+            playerValues.put(CrapixContract.CrapixEntry.COLUMN_UraniumEnrichment, 0);
+            returnContentValues[i] = playerValues;
         }
         return returnContentValues;
     }
@@ -456,7 +340,7 @@ public class TestProvider extends AndroidTestCase {
         // Now we can bulkInsert some weather.  In fact, we only implement BulkInsert for weather
         // entries.  With ContentProviders, you really only have to implement the features you
         // use, after all.
-        ContentValues[] bulkInsertContentValues = createBulkInsertWeatherValues(locationRowId);
+        ContentValues[] bulkInsertContentValues = createBulkInsertWeatherValues(1);
 
         // Register a content observer for our bulk insert.
         TestUtilities.TestContentObserver weatherObserver = TestUtilities.getTestContentObserver();
@@ -478,7 +362,7 @@ public class TestProvider extends AndroidTestCase {
                 null, // leaving "columns" null just returns all the columns.
                 null, // cols for "where" clause
                 null, // values for "where" clause
-                CrapixContract.CrapixEntry.COLUMN_DATE + " ASC"  // sort order == by DATE ASCENDING
+                CrapixEntry._ID + " ASC"  // sort order == by DATE ASCENDING
         );
 
         // we should have as many records in the database as we've inserted
@@ -489,4 +373,5 @@ public class TestProvider extends AndroidTestCase {
 
         cursor.close();
     }
+
 }
