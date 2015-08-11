@@ -12,7 +12,7 @@ import com.example.android.crapix.data.CrapixContract.CrapixEntry;
 public class CrapixDbHelper extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     static final String DATABASE_NAME = "crapix.db";
 
@@ -31,7 +31,6 @@ public class CrapixDbHelper extends SQLiteOpenHelper {
                 CrapixEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
 
                 // the ID of the location entry associated with this weather data
-                CrapixEntry.COLUMN_Country_ID + " INTEGER NOT NULL, " +
 
                 CrapixEntry.COLUMN_Money + " INTEGER NOT NULL, " +
                 CrapixEntry.COLUMN_Housing + " INTEGER NOT NULL, " +
@@ -46,11 +45,11 @@ public class CrapixDbHelper extends SQLiteOpenHelper {
                 CrapixEntry.COLUMN_OilRefinery + " INTEGER NOT NULL, " +
 
                 CrapixEntry.COLUMN_Uranium + " INTEGER NOT NULL, " +
-                CrapixEntry.COLUMN_UraniumEnrichment + "INTEGER NOT NULL, " +
+                CrapixEntry.COLUMN_UraniumEnrichment + " INTEGER NOT NULL, " +
 
                 // To assure the application have just one weather entry per day
                 // per location, it's created a UNIQUE constraint with REPLACE strategy
-                " UNIQUE (" + CrapixEntry.COLUMN_Country_ID  + ") ON CONFLICT REPLACE);";
+                " UNIQUE (" + CrapixEntry._ID  + ") ON CONFLICT REPLACE);";
 
         sqLiteDatabase.execSQL(SQL_CREATE_CRAPIX_TABLE);
 
